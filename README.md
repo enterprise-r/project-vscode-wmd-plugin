@@ -66,19 +66,15 @@ code --install-extension wmd-*.vsix
 
 ## Release
 
-1. On a branch, bump `version` in `package.json`, add a `CHANGELOG.md` section for it,
-   and merge the PR.
-2. Tag main and push the tag:
+1. In GitHub, open **Actions** > **Release** > **Run workflow**.
+2. Enter the new version (for example `0.2.4`) and, optionally, the changelog line.
+   Left empty, the changelog lists the commit subjects since the last tag.
+3. The workflow commits `Release X.Y.Z` on main (signed by GitHub), tags `vX.Y.Z`, builds the
+   `.vsix` and attaches it to a GitHub Release with the changelog section as notes.
+4. Approve the `marketplace` deployment in the run to publish to the Marketplace.
 
-   ```sh
-   git checkout main && git pull
-   tag=v$(node -p "require('./package.json').version")
-   git tag $tag && git push origin $tag
-   ```
-
-3. The **Release** workflow checks that the tag matches `package.json`, builds the `.vsix`,
-   attaches it to a GitHub Release with the changelog section as notes, and publishes to the
-   Marketplace once a reviewer approves the `marketplace` environment.
+Pushing a `v*` tag by hand still works: the workflow checks that the tag matches `package.json`
+and continues from step 3.
 
 Every PR and push to main also builds the `.vsix` as a downloadable CI artifact.
 

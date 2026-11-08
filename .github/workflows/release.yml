@@ -3,23 +3,99 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "New version, e.g. 0.2.4"
+        required: true
+      notes:
+        description: "Changelog line (empty: the commit subjects since the last tag)"
+        required: false
 
 permissions:
   contents: read
 
+concurrency:
+  group: release
+
+env:
+  TAG: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', inputs.version) || github.ref_name }}
+
 jobs:
+  # Run workflow: commit "Release X.Y.Z" on main and tag vX.Y.Z.
+  # The commit goes through the GitHub API, so GitHub signs it (Verified).
+  prepare:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Bump version, changelog, commit and tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          set -euo pipefail
+          current=$(node -p "require('./package.json').version")
+          echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' \
+            || { echo "::error::Version must look like 1.2.3, got $VERSION"; exit 1; }
+          [ "$(printf '%s\n%s\n' "$current" "$VERSION" | sort -V | tail -1)" = "$VERSION" ] && [ "$current" != "$VERSION" ] \
+            || { echo "::error::$VERSION is not newer than $current"; exit 1; }
+          git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null \
+            && { echo "::error::Tag $TAG already exists"; exit 1; } || true
+
+          if [ -z "$NOTES" ]; then
+            NOTES=$(git log --no-merges --format='%s.' "$(git describe --tags --abbrev=0)..HEAD" | paste -sd' ')
+          fi
+          [ -n "$NOTES" ] || { echo "::error::Nothing to release since the last tag"; exit 1; }
+
+          npm version "$VERSION" --no-git-tag-version --allow-same-version >/dev/null
+          node -e '
+            const fs = require("fs");
+            const s = fs.readFileSync("CHANGELOG.md", "utf8");
+            const entry = `## ${process.env.VERSION} - ${new Date().toISOString().slice(0, 10)}\n\n${process.env.NOTES}\n\n`;
+            fs.writeFileSync("CHANGELOG.md", s.replace(/^(# Changelog\n\n)/, `$1${entry}`));'
+          git diff --stat
+
+          b64() { base64 -w0 "$1"; }
+          sha=$(gh api graphql \
+            -f query='mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }' \
+            -F input="$(jq -n \
+              --arg repo "$GITHUB_REPOSITORY" --arg head "$(git rev-parse HEAD)" \
+              --arg msg "Release $VERSION" \
+              --arg pkg "$(b64 package.json)" --arg log "$(b64 CHANGELOG.md)" \
+              '{branch: {repositoryNameWithOwner: $repo, branchName: "main"},
+                expectedHeadOid: $head, message: {headline: $msg},
+                fileChanges: {additions: [{path: "package.json", contents: $pkg},
+                                          {path: "CHANGELOG.md", contents: $log}]}}')" \
+            --jq '.data.createCommitOnBranch.commit.oid')
+          gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$TAG" -f sha="$sha" >/dev/null
+          echo "Committed $sha and tagged $TAG" >> "$GITHUB_STEP_SUMMARY"
+
   build:
+    needs: prepare
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
       - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Check tag matches package.json version
         run: |
           version="v$(node -p "require('./package.json').version")"
-          if [ "$GITHUB_REF_NAME" != "$version" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $version"
+          if [ "$TAG" != "$version" ]; then
+            echo "::error::Tag $TAG does not match package.json version $version"
             exit 1
           fi
       - run: npx --yes @vscode/vsce@4 package
@@ -36,6 +112,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG }}
       - uses: actions/download-artifact@v8
         with:
           name: vsix
@@ -44,13 +122,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # Notes: the CHANGELOG section "## X.Y.Z ..." up to the next "## ".
-          awk -v v="${GITHUB_REF_NAME#v}" '
+          awk -v v="${TAG#v}" '
             /^## / { on = ($2 == v); next }
             on' CHANGELOG.md > notes.md
           if [ -s notes.md ]; then
-            gh release create "$GITHUB_REF_NAME" *.vsix --title "$GITHUB_REF_NAME" --notes-file notes.md
+            gh release create "$TAG" *.vsix --title "$TAG" --notes-file notes.md
           else
-            gh release create "$GITHUB_REF_NAME" *.vsix --title "$GITHUB_REF_NAME" --generate-notes
+            gh release create "$TAG" *.vsix --title "$TAG" --generate-notes
           fi
 
   marketplace:
