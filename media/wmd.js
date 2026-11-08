@@ -1,6 +1,8 @@
 // Marks previews of .w.md files and adds a media target selector.
 // The preview fills in and morphs its content after load, so everything
 // is re-applied whenever the DOM changes or a new document is shown.
+import ICON from '../images/icon.svg';
+
 (() => {
   const ID = 'wmd-media';
   const TARGETS = ['full', 'screen', 'document', 'flow', 'receipt', 'disabled'];
@@ -25,8 +27,13 @@
     schedule();
   };
 
-  // The W icon (the extension icon), inlined so the preview needs no extra resources.
-  const LOGO = '<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" viewBox="0 0 128 128"> <defs> <radialGradient id="wmd-bg" cx=".5" cy=".35" r=".8"> <stop offset="0" stop-color="#24103d"/> <stop offset="1" stop-color="#120320"/> </radialGradient> <linearGradient id="wmd-w" x1="0" y1="0" x2="0" y2="1"> <stop offset="0" stop-color="#a985d1"/> <stop offset="1" stop-color="#8f68b7"/> </linearGradient> </defs> <rect x="4" y="4" width="120" height="120" rx="26" fill="url(#wmd-bg)"/> <rect x="17" y="17" width="94" height="94" rx="16" fill="none" stroke="#df8218" stroke-width="3.5" stroke-dasharray="1 6.9212" stroke-linecap="round"/> <path d="M32 48 L46 94 L64 62 L82 94 L96 48" fill="none" stroke="url(#wmd-w)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/> <circle cx="25.0" cy="25.0" r="11.25" fill="#8cd61f"/> <circle cx="103.0" cy="25.0" r="11.25" fill="#e5484d"/> </svg>';
+  // The W icon: images/icon.svg, inlined at build time, so the preview needs no extra resources.
+  const LOGO = ICON
+    .replace(/<!--.*?-->/gs, '')
+    .replace(/>\s+</g, '><')
+    .replace(/\bid="([^"]+)"/g, 'id="wmd-$1"')
+    .replace(/url\(#([^)]+)\)/g, 'url(#wmd-$1)')
+    .replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
 
   const selector = () => {
     let root = document.getElementById(ID);
