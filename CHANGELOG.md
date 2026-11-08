@@ -4,6 +4,8 @@
 
 The Enterprise-R palette ships as `--ui-*` variables, for work card styles to use. The card colours are unchanged.
 
+A gonogo has its green border on the right and its red border on the left: go is the right path.
+
 ## 0.2.3 - 2026-10-30
 
 README describes the six targets and the current install and release steps. Work cards spelled as two words.

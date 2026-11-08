@@ -26,7 +26,7 @@ body.wmd {
     & form { border: 3px solid gray; }
     & go { border: 3px dashed green; }
     & nogo { border: 3px dashed red; }
-    & gonogo { border-left: 6px dotted green; border-right: 6px dotted red; }
+    & gonogo { border-left: 6px dotted red; border-right: 6px dotted green; } /* go is the right path */
   }
 
   /* Bubbles and names: full and flow */
