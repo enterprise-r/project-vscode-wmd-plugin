@@ -7,9 +7,14 @@
       <stop offset=".75" stop-color="#77AF8A"/>
       <stop offset="1" stop-color="#77AF8A"/>
     </linearGradient>
+    <!-- outer band: from the logo ground at the card's edge out to the darkest ink lilac at the corners -->
+    <radialGradient id="band" gradientUnits="userSpaceOnUse" cx="64" cy="64" r="85">
+      <stop offset=".55" stop-color="#3F2C53"/>
+      <stop offset="1" stop-color="#0C040F"/>
+    </radialGradient>
   </defs>
-  <!-- outer band in the darkest ink lilac, card inside the border on the logo ground -->
-  <rect x="4" y="4" width="120" height="120" rx="26" fill="#0C040F"/>
+  <!-- outer band fading out to the darkest ink lilac, card inside the border on the logo ground -->
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="url(#band)"/>
   <rect x="17" y="17" width="94" height="94" rx="16" fill="#3F2C53"/>
   <!-- dotted card border in Enterprise-R amber -->
   <rect x="17" y="17" width="94" height="94" rx="16" fill="none" stroke="#F0A202" stroke-width="4.5" stroke-dasharray="1 7.7133" stroke-linecap="round"/>
