@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 - 2026-11-08
+
+Icon improvements
+
 ## 0.3.0 - 2026-11-08
 
 Release workflow: send the commit mutation as a JSON body (#23). Release from a Run workflow button: bump, commit, tag, then approve publishing (#22). Receipt: no margins around the records (#21). Gonogo: green on the right (#20). Ship the Enterprise-R palette as --ui-* variables (#19). Snap icon colours to palette (#18).
