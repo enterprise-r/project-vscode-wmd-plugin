@@ -66,16 +66,17 @@ jobs:
           git diff --stat
 
           b64() { base64 -w0 "$1"; }
-          sha=$(gh api graphql \
-            -f query='mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }' \
-            -F input="$(jq -n \
-              --arg repo "$GITHUB_REPOSITORY" --arg head "$(git rev-parse HEAD)" \
-              --arg msg "Release $VERSION" \
-              --arg pkg "$(b64 package.json)" --arg log "$(b64 CHANGELOG.md)" \
-              '{branch: {repositoryNameWithOwner: $repo, branchName: "main"},
+          jq -n \
+            --arg repo "$GITHUB_REPOSITORY" --arg head "$(git rev-parse HEAD)" \
+            --arg msg "Release $VERSION" \
+            --arg pkg "$(b64 package.json)" --arg log "$(b64 CHANGELOG.md)" \
+            '{query: "mutation($input: CreateCommitOnBranchInput!) { createCommitOnBranch(input: $input) { commit { oid } } }",
+              variables: {input: {
+                branch: {repositoryNameWithOwner: $repo, branchName: "main"},
                 expectedHeadOid: $head, message: {headline: $msg},
                 fileChanges: {additions: [{path: "package.json", contents: $pkg},
-                                          {path: "CHANGELOG.md", contents: $log}]}}')" \
+                                          {path: "CHANGELOG.md", contents: $log}]}}}}' > commit.json
+          sha=$(gh api graphql --input commit.json \
             --jq '.data.createCommitOnBranch.commit.oid')
           gh api "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$TAG" -f sha="$sha" >/dev/null
           echo "Committed $sha and tagged $TAG" >> "$GITHUB_STEP_SUMMARY"
