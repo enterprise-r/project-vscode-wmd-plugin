@@ -127,7 +127,7 @@ body.wmd {
   &.wmd-receipt {
     & :is(nogo, blockquote),
     & :not(#wmd-media, #wmd-media *, record, record *, .wmd-record, .wmd-record *, input[record]:not(:has(+ .wmd-record)), :has(record, .wmd-record, input[record])) { display: none; }
-    & :has(record, .wmd-record, input[record]) { font-size: 0; border: 0; padding: 0; }
+    & :has(record, .wmd-record, input[record]) { font-size: 0; margin: 0; border: 0; padding: 0; }
     & :is(record, .wmd-record) { display: block; font-size: var(--markdown-font-size, 14px); }
   }
 
@@ -136,7 +136,7 @@ body.wmd {
     &:is(.wmd-full, .wmd-screen, .wmd-document, .wmd-flow, .wmd-receipt) {
       & :is(nogo, blockquote),
       & :not(record, record *, .wmd-record, .wmd-record *, input[record]:not(:has(+ .wmd-record)), :has(record, .wmd-record, input[record])) { display: none; }
-      & :has(record, .wmd-record, input[record]) { font-size: 0; border: 0; padding: 0; }
+      & :has(record, .wmd-record, input[record]) { font-size: 0; margin: 0; border: 0; padding: 0; }
       & :is(record, .wmd-record) { display: block; font-size: var(--markdown-font-size, 14px); }
     }
     & input[record]:has(+ .wmd-record) { display: none; }
