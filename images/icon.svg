@@ -8,9 +8,11 @@
       <stop offset="1" stop-color="#77AF8A"/>
     </linearGradient>
   </defs>
-  <rect x="4" y="4" width="120" height="120" rx="26" fill="#3F2C53"/>
+  <!-- outer band in the darkest ink lilac, card inside the border on the logo ground -->
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="#0C040F"/>
+  <rect x="17" y="17" width="94" height="94" rx="16" fill="#3F2C53"/>
   <!-- dotted card border in Enterprise-R amber -->
-  <rect x="17" y="17" width="94" height="94" rx="16" fill="none" stroke="#F0A202" stroke-width="3.5" stroke-dasharray="1 6.9212" stroke-linecap="round"/>
+  <rect x="17" y="17" width="94" height="94" rx="16" fill="none" stroke="#F0A202" stroke-width="4.5" stroke-dasharray="1 7.7133" stroke-linecap="round"/>
   <!-- W -->
   <path d="M32 48 L46 94 L64 62 L82 94 L96 48" fill="none" stroke="url(#striped)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
   <!-- nogo / go bells on the two tips, like a jester's cap -->
