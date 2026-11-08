@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+The Enterprise-R palette ships as `--ui-*` variables, for work card styles to use. The card colours are unchanged.
+
 ## 0.2.3 - 2026-10-30
 
 README describes the six targets and the current install and release steps. Work cards spelled as two words.
