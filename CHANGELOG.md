@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Vendor the palette from project-branding main with a script (#26). Show each box's status in the flow view (#27). Fenced schemas show as the preview's own code block, with no box around it (#28). Color schemas, compact schema lines and in/out bubbles with highlight.js (#29). Form controls follow the VS Code theme (#30). The W icon is native at rest, in color on hover, and has a magenta border when open (#31).
+Vendor the palette from project-branding main with a script (#26). Show each box's status in the flow view (#27). Fenced schemas show as the preview's own code block, with no box around it (#28). Color schemas, compact schema lines and in/out bubbles with highlight.js (#29). Form controls follow the VS Code theme (#30). Textareas take the full width. The W icon is native at rest, in color on hover, and has a magenta border when open (#31).
 
 ## 0.3.1 - 2026-11-08
 

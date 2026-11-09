@@ -5,6 +5,8 @@ body.wmd {
   & record::before { content: attr(name) ": "; font-weight: bold; }
   /* One record per line, even when several share a paragraph */
   & p > record { display: block; }
+  /* A textarea takes the full width, its border inside it */
+  & textarea { display: block; box-sizing: border-box; width: 100%; }
   & .wmd-record { display: none; white-space: pre; font-weight: bold; }
   & .wmd-record > span { font-weight: normal; }
   & .wmd-record > .wmd-key { font-weight: bold; }
