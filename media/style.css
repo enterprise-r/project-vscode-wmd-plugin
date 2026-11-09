@@ -10,15 +10,14 @@ body.wmd {
   & .wmd-record > .wmd-key { font-weight: bold; }
   & .wmd-record > .wmd-name { display: none; }
   /* A <schema> is JSON, shown as written; its compact mirror shows only in flow.
-     A fenced schema keeps this box. Collapse the blank lines the fence leaves
-     around the code block, and the code block's own margin. */
+     A fenced schema is the preview's own code block, with no box around it. */
   & schema {
     display: block; white-space: pre; margin: .5em 0; padding: .4em 1em; overflow-x: auto;
     font-family: var(--vscode-editor-font-family, monospace);
     border: 1px solid var(--vscode-editorWidget-border, var(--vscode-foreground, currentColor));
     border-radius: 4px;
   }
-  & schema:has(> pre) { white-space: normal; }
+  & schema:has(> pre) { white-space: normal; padding: 0; border: 0; }
   & schema:has(> pre) > pre { margin: 0; }
   & .wmd-schema { display: none; }
 
