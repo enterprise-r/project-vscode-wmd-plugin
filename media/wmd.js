@@ -45,6 +45,11 @@ import hljs from './vendor/highlight.js';
     button.innerHTML = LOGO;
     button.setAttribute('aria-label', 'Work card view');
     button.setAttribute('aria-haspopup', 'menu');
+    button.setAttribute('aria-expanded', 'false');
+    const open = (on) => {
+      root.classList.toggle('open', on);
+      button.setAttribute('aria-expanded', String(on));
+    };
     const menu = document.createElement('ul');
     menu.setAttribute('role', 'menu');
     for (const t of TARGETS) {
@@ -52,12 +57,12 @@ import hljs from './vendor/highlight.js';
       li.textContent = t;
       li.dataset.target = t;
       li.setAttribute('role', 'menuitemradio');
-      li.addEventListener('click', () => { setTarget(t); root.classList.remove('open'); });
+      li.addEventListener('click', () => { setTarget(t); open(false); });
       menu.appendChild(li);
     }
-    button.addEventListener('click', (e) => { e.stopPropagation(); root.classList.toggle('open'); });
-    document.addEventListener('click', (e) => { if (!root.contains(e.target)) root.classList.remove('open'); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') root.classList.remove('open'); });
+    button.addEventListener('click', (e) => { e.stopPropagation(); open(!root.classList.contains('open')); });
+    document.addEventListener('click', (e) => { if (!root.contains(e.target)) open(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') open(false); });
     root.append(button, menu);
     document.body.appendChild(root);
     return root;

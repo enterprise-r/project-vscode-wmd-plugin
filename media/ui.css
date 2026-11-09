@@ -16,16 +16,17 @@
   background: var(--vscode-toolbar-hoverBackground, var(--vscode-list-hoverBackground, transparent));
 }
 #wmd-media > button:focus-visible { outline: 1px solid var(--vscode-focusBorder, #007fd4); outline-offset: 2px; }
-/* At rest the tile and outer band drop out and the mark takes the inactive
-   UI text colour. Hover releases those overrides, so the SVG's own colours
-   return. An open menu, or a press, draws a 2px border in the branding magenta. */
+/* At rest the tile and outer band drop out and the mark takes the IDE icon
+   color. Hover releases those overrides, so the SVG's own colors return.
+   An open menu, or a press, draws a 2px border in the branding magenta. */
 #wmd-media:not(:hover) > button :is(.wmd-band, .wmd-tile) { opacity: 0; }
-#wmd-media:not(:hover) > button :is(.wmd-border, .wmd-w) { stroke: var(--vscode-descriptionForeground, var(--vscode-foreground)); }
-#wmd-media:not(:hover) > button .wmd-bell { fill: var(--vscode-descriptionForeground, var(--vscode-foreground)); }
+#wmd-media:not(:hover) > button :is(.wmd-border, .wmd-w) { stroke: var(--vscode-icon-foreground, var(--vscode-foreground)); }
+#wmd-media:not(:hover) > button .wmd-bell { fill: var(--vscode-icon-foreground, var(--vscode-foreground)); }
 #wmd-media:is(.open, :active) > button .wmd-border {
   stroke: var(--ui-border-active);
-  stroke-width: calc(128 * 2px / 2.2em);
+  stroke-width: 2px;
   stroke-dasharray: none;
+  vector-effect: non-scaling-stroke;
 }
 #wmd-media > ul {
   display: none; position: absolute; top: 2.5em; right: 0; min-width: 8em;
