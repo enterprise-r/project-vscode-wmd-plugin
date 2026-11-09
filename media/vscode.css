@@ -1,8 +1,15 @@
-/* Form controls in a .w.md preview, themed with the active IDE colours.
-   Plugin only: wcard does not vendor this file. */
+/* Form controls in a .w.md preview, themed with the active IDE colors.
+   Plugin only: wcard does not vendor this file. Every selector is in :where(),
+   so a work card's own styles always win. */
 
-body.wmd {
-  & :is(input:not([type]),
+:where(body.wmd .markdown-body) {
+  & :where(input, select, textarea, button) {
+    border-radius: 2px;
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+  }
+
+  & :where(input:not([type]),
         input[type="text"], input[type="search"], input[type="url"], input[type="tel"],
         input[type="email"], input[type="password"], input[type="number"],
         input[type="date"], input[type="time"], input[type="datetime-local"],
@@ -11,52 +18,38 @@ body.wmd {
     color: var(--vscode-input-foreground);
     background: var(--vscode-input-background);
     border: 1px solid var(--vscode-input-border, transparent);
-    border-radius: 2px;
-    font-family: var(--vscode-font-family);
-    font-size: var(--vscode-font-size);
-    outline: none;
-    &:focus { border-color: var(--vscode-focusBorder); }
     &::placeholder { color: var(--vscode-input-placeholderForeground); }
   }
 
-  & select {
+  /* As specific as the preview's own input:focus rule, and loaded after it. */
+  & :is(input, select, textarea):focus { outline: 1px solid var(--vscode-focusBorder); outline-offset: -1px; }
+
+  & :where(select) {
     color: var(--vscode-dropdown-foreground);
     background: var(--vscode-dropdown-background);
     border: 1px solid var(--vscode-dropdown-border, transparent);
-    border-radius: 2px;
-    font-family: var(--vscode-font-family);
-    font-size: var(--vscode-font-size);
-    & option, & optgroup {
+    & :where(option, optgroup) {
       color: var(--vscode-dropdown-foreground);
       background: var(--vscode-dropdown-listBackground);
     }
   }
 
-  /* The W menu and the preview's copy button are not form controls. */
-  & :is(button, input[type="button"], input[type="submit"]):not([type="reset"], #wmd-media *, .code-block-copy-button) {
+  /* The preview's own copy button is not a form control. */
+  & :where(button, input[type="button"], input[type="submit"]):where(:not([type="reset"], .code-block-copy-button)) {
     color: var(--vscode-button-foreground);
     background: var(--vscode-button-background);
     border: 1px solid var(--vscode-button-border, transparent);
-    border-radius: 2px;
-    font-family: var(--vscode-font-family);
-    font-size: var(--vscode-font-size);
-    &:hover { background: var(--vscode-button-hoverBackground); }
+    &:where(:hover) { background: var(--vscode-button-hoverBackground); }
   }
-  & :is(button[type="reset"], input[type="reset"]) {
+  & :where(button[type="reset"], input[type="reset"]) {
     color: var(--vscode-button-secondaryForeground);
     background: var(--vscode-button-secondaryBackground);
     border: 1px solid var(--vscode-button-secondaryBorder, transparent);
-    border-radius: 2px;
-    font-family: var(--vscode-font-family);
-    font-size: var(--vscode-font-size);
-    &:hover { background: var(--vscode-button-secondaryHoverBackground); }
+    &:where(:hover) { background: var(--vscode-button-secondaryHoverBackground); }
   }
 
-  & :is(input[type="checkbox"], input[type="radio"]) {
+  & :where(input[type="checkbox"], input[type="radio"]) {
     accent-color: var(--vscode-checkbox-selectBackground, var(--vscode-checkbox-foreground));
-    color: var(--vscode-checkbox-foreground);
-    background-color: var(--vscode-checkbox-background);
-    border-color: var(--vscode-checkbox-border);
   }
 }
 
