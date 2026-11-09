@@ -1,0 +1,65 @@
+/* Form controls in a .w.md preview, themed with the active IDE colours.
+   Plugin only: wcard does not vendor this file. */
+
+body.wmd {
+  & :is(input:not([type]),
+        input[type="text"], input[type="search"], input[type="url"], input[type="tel"],
+        input[type="email"], input[type="password"], input[type="number"],
+        input[type="date"], input[type="time"], input[type="datetime-local"],
+        input[type="month"], input[type="week"],
+        textarea) {
+    color: var(--vscode-input-foreground);
+    background: var(--vscode-input-background);
+    border: 1px solid var(--vscode-input-border, transparent);
+    border-radius: 2px;
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    outline: none;
+    &:focus { border-color: var(--vscode-focusBorder); }
+    &::placeholder { color: var(--vscode-input-placeholderForeground); }
+  }
+
+  & select {
+    color: var(--vscode-dropdown-foreground);
+    background: var(--vscode-dropdown-background);
+    border: 1px solid var(--vscode-dropdown-border, transparent);
+    border-radius: 2px;
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    & option, & optgroup {
+      color: var(--vscode-dropdown-foreground);
+      background: var(--vscode-dropdown-listBackground);
+    }
+  }
+
+  /* The W menu and the preview's copy button are not form controls. */
+  & :is(button, input[type="button"], input[type="submit"]):not([type="reset"], #wmd-media *, .code-block-copy-button) {
+    color: var(--vscode-button-foreground);
+    background: var(--vscode-button-background);
+    border: 1px solid var(--vscode-button-border, transparent);
+    border-radius: 2px;
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    &:hover { background: var(--vscode-button-hoverBackground); }
+  }
+  & :is(button[type="reset"], input[type="reset"]) {
+    color: var(--vscode-button-secondaryForeground);
+    background: var(--vscode-button-secondaryBackground);
+    border: 1px solid var(--vscode-button-secondaryBorder, transparent);
+    border-radius: 2px;
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    &:hover { background: var(--vscode-button-secondaryHoverBackground); }
+  }
+
+  & :is(input[type="checkbox"], input[type="radio"]) {
+    accent-color: var(--vscode-checkbox-selectBackground, var(--vscode-checkbox-foreground));
+    color: var(--vscode-checkbox-foreground);
+    background-color: var(--vscode-checkbox-background);
+    border-color: var(--vscode-checkbox-border);
+  }
+}
+
+/* High contrast bodies do not also carry vscode-dark or vscode-light. */
+body.wmd.vscode-dark, body.wmd.vscode-high-contrast { color-scheme: dark; }
+body.wmd.vscode-light, body.wmd.vscode-high-contrast-light { color-scheme: light; }
