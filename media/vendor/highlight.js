@@ -1,5 +1,5 @@
 /*!
- * highlight.js v11.12.0, core and the JSON language.
+ * highlight.js 11, core and the JSON language.
  *
  * BSD 3-Clause License
  *
@@ -57,9 +57,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../../../../../../tmp/hljs/package/lib/core.js
+// package/lib/core.js
 var require_core = __commonJS({
-  "../../../../../../tmp/hljs/package/lib/core.js"(exports, module) {
+  "package/lib/core.js"(exports, module) {
     function deepFreeze(obj) {
       if (obj instanceof Map) {
         obj.clear = obj.delete = obj.set = function() {
@@ -1611,11 +1611,11 @@ var require_core = __commonJS({
   }
 });
 
-// ../../../../../../tmp/hljs/package/es/core.js
+// package/es/core.js
 var import_core = __toESM(require_core(), 1);
 var core_default = import_core.default;
 
-// ../../../../../../tmp/hljs/package/es/languages/json.js
+// package/es/languages/json.js
 var EXTENDED_NUMBER_RE = "([-+]?)(\\b0[xX][a-fA-F0-9]+|(\\b\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)|NaN|[-+]?Infinity";
 var EXTENDED_NUMBER_MODE = {
   scope: "number",
@@ -1662,7 +1662,7 @@ function json(hljs) {
   };
 }
 
-// ../../../../../../tmp/hljs/entry.js
+// entry.js
 core_default.registerLanguage("json", json);
 var entry_default = core_default;
 export {

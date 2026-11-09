@@ -65,7 +65,8 @@ code --install-extension wmd-*.vsix
    Requires Node.js.
 
 `media/palette.css` is copied unedited from project-branding by
-`scripts/vendor-palette.sh` (`main` by default).
+`scripts/vendor-palette.sh` (`main` by default). `media/vendor/highlight.js` is
+highlight.js core and JSON, bundled by `scripts/vendor-highlight.sh` (latest 11.x by default).
 
 ## Release
 
