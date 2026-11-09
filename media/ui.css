@@ -9,15 +9,24 @@
 #wmd-media > button {
   display: block; width: 2.2em; height: 2.2em; padding: 0;
   border: 0; border-radius: 22%; background: none;
-  cursor: pointer; opacity: .4; filter: grayscale(1);
-  box-shadow: 0 2px 6px var(--vscode-widget-shadow, rgba(0,0,0,.35));
-  transition: opacity .15s, transform .15s, filter .15s;
+  cursor: pointer;
 }
 #wmd-media > button > svg { display: block; width: 100%; height: 100%; }
-#wmd-media:hover > button, #wmd-media.open > button, #wmd-media > button:focus-visible {
-  opacity: 1; transform: scale(1.08); filter: none;
+#wmd-media:hover > button {
+  background: var(--vscode-toolbar-hoverBackground, var(--vscode-list-hoverBackground, transparent));
 }
 #wmd-media > button:focus-visible { outline: 1px solid var(--vscode-focusBorder, #007fd4); outline-offset: 2px; }
+/* At rest the tile and outer band drop out and the mark takes the inactive
+   UI text colour. Hover releases those overrides, so the SVG's own colours
+   return. An open menu, or a press, draws a 2px border in the branding magenta. */
+#wmd-media:not(:hover) > button :is(.wmd-band, .wmd-tile) { opacity: 0; }
+#wmd-media:not(:hover) > button :is(.wmd-border, .wmd-w) { stroke: var(--vscode-descriptionForeground, var(--vscode-foreground)); }
+#wmd-media:not(:hover) > button .wmd-bell { fill: var(--vscode-descriptionForeground, var(--vscode-foreground)); }
+#wmd-media:is(.open, :active) > button .wmd-border {
+  stroke: var(--ui-border-active);
+  stroke-width: calc(128 * 2px / 2.2em);
+  stroke-dasharray: none;
+}
 #wmd-media > ul {
   display: none; position: absolute; top: 2.5em; right: 0; min-width: 8em;
   margin: 0; padding: .25em; list-style: none; border-radius: 6px;
