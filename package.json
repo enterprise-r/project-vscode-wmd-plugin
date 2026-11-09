@@ -55,7 +55,7 @@
     ]
   },
   "scripts": {
-    "build": "npx --yes esbuild@0.25 media/wmd.js media/palette.css media/ui.css media/style.css --bundle --loader:.svg=text --minify --target=chrome122 --outdir=dist",
+    "build": "npx --yes esbuild@0.25 media/wmd.js media/palette.css media/ui.css media/style.css --bundle --loader:.svg=text --minify --legal-comments=eof --target=chrome122 --outdir=dist",
     "watch": "npm run build -- --watch=forever",
     "vscode:prepublish": "npm run build"
   }
