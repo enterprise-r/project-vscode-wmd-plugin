@@ -71,8 +71,9 @@ highlight.js core and JSON, bundled by `scripts/vendor-highlight.sh` (latest 11.
 ## Release
 
 1. In GitHub, open **Actions** > **Release** > **Run workflow**.
-2. Enter the new version (for example `0.2.4`) and, optionally, the changelog line.
-   Left empty, the changelog lists the commit subjects since the last tag.
+2. Enter the new version (for example `0.3.2`).
+   Notes are the `## Unreleased` section of `CHANGELOG.md`, written as the changes land.
+   The workflow dates that section as the new version and leaves a fresh `## Unreleased`.
 3. The workflow commits `Release X.Y.Z` on main (signed by GitHub), tags `vX.Y.Z`, builds the
    `.vsix` and attaches it to a GitHub Release with the changelog section as notes.
 4. Approve the `marketplace` deployment in the run to publish to the Marketplace.

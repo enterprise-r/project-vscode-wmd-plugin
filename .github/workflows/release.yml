@@ -6,11 +6,8 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "New version, e.g. 0.2.4"
+        description: "New version, e.g. 0.3.2"
         required: true
-      notes:
-        description: "Changelog line (empty: the commit subjects since the last tag)"
-        required: false
 
 permissions:
   contents: read
@@ -33,7 +30,6 @@ jobs:
       - uses: actions/checkout@v7
         with:
           ref: main
-          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 22
@@ -41,7 +37,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.version }}
-          NOTES: ${{ inputs.notes }}
         run: |
           set -euo pipefail
           current=$(node -p "require('./package.json').version")
@@ -52,17 +47,45 @@ jobs:
           git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null \
             && { echo "::error::Tag $TAG already exists"; exit 1; } || true
 
-          if [ -z "$NOTES" ]; then
-            NOTES=$(git log --no-merges --format='%s.' "$(git describe --tags --abbrev=0)..HEAD" | paste -sd' ')
-          fi
-          [ -n "$NOTES" ] || { echo "::error::Nothing to release since the last tag"; exit 1; }
-
           npm version "$VERSION" --no-git-tag-version --allow-same-version >/dev/null
-          node -e '
-            const fs = require("fs");
-            const s = fs.readFileSync("CHANGELOG.md", "utf8");
-            const entry = `## ${process.env.VERSION} - ${new Date().toISOString().slice(0, 10)}\n\n${process.env.NOTES}\n\n`;
-            fs.writeFileSync("CHANGELOG.md", s.replace(/^(# Changelog\n\n)/, `$1${entry}`));'
+          # Date the Unreleased section as this version and leave a fresh one.
+          node <<'EOF'
+          const fs = require("fs");
+          const version = process.env.VERSION;
+          const date = new Date().toISOString().slice(0, 10);
+          const lines = fs.readFileSync("CHANGELOG.md", "utf8").split(/\r?\n/);
+          if (lines[0] !== "# Changelog") {
+            console.error("::error::CHANGELOG.md must start with # Changelog");
+            process.exit(1);
+          }
+          const start = lines.findIndex((line) => line.trim() === "## Unreleased");
+          if (start < 0) {
+            console.error("::error::CHANGELOG.md has no ## Unreleased section");
+            process.exit(1);
+          }
+          let end = lines.findIndex((line, i) => i > start && line.startsWith("## "));
+          if (end < 0) end = lines.length;
+          const notes = lines.slice(start + 1, end).join("\n").trim();
+          if (!notes) {
+            console.error("::error::## Unreleased has no changes to release");
+            process.exit(1);
+          }
+          const kept = lines.slice(0, start).concat(lines.slice(end));
+          const afterTitle = kept.slice(1).join("\n").replace(/^\n+/, "").replace(/\n+$/, "");
+          const out = [
+            "# Changelog",
+            "",
+            "## Unreleased",
+            "",
+            `## ${version} - ${date}`,
+            "",
+            notes,
+            "",
+            afterTitle,
+            "",
+          ].join("\n");
+          fs.writeFileSync("CHANGELOG.md", out);
+          EOF
           git diff --stat
 
           b64() { base64 -w0 "$1"; }
