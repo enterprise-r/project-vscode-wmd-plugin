@@ -12,14 +12,14 @@
     <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter>
   </defs>
   <!-- outer band fading from the logo ground at the border out to the darkest ink lilac at the edge -->
-  <rect x="4" y="4" width="120" height="120" rx="26" fill="#0C040F"/>
-  <g clip-path="url(#tile)"><rect x="12" y="12" width="104" height="104" rx="20" fill="#3F2C53" filter="url(#soft)"/></g>
-  <rect x="17" y="17" width="94" height="94" rx="16" fill="#3F2C53"/>
+  <rect class="wmd-band" x="4" y="4" width="120" height="120" rx="26" fill="#0C040F"/>
+  <g clip-path="url(#tile)"><rect class="wmd-band" x="12" y="12" width="104" height="104" rx="20" fill="#3F2C53" filter="url(#soft)"/></g>
+  <rect class="wmd-tile" x="17" y="17" width="94" height="94" rx="16" fill="#3F2C53"/>
   <!-- dotted card border in Enterprise-R amber -->
-  <rect x="17" y="17" width="94" height="94" rx="16" fill="none" stroke="#F0A202" stroke-width="4.5" stroke-dasharray="1 7.7133" stroke-linecap="round"/>
+  <rect class="wmd-border" x="17" y="17" width="94" height="94" rx="16" fill="none" stroke="#F0A202" stroke-width="4.5" stroke-dasharray="1 7.7133" stroke-linecap="round"/>
   <!-- W -->
-  <path d="M32 48 L46 94 L64 62 L82 94 L96 48" fill="none" stroke="url(#striped)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="wmd-w" d="M32 48 L46 94 L64 62 L82 94 L96 48" fill="none" stroke="url(#striped)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
   <!-- nogo / go bells on the two tips, like a jester's cap -->
-  <circle cx="25.0" cy="25.0" r="11.25" fill="#EC8790"/>
-  <circle cx="103.0" cy="25.0" r="11.25" fill="#9ADD6D"/>
+  <circle class="wmd-bell" cx="25.0" cy="25.0" r="11.25" fill="#EC8790"/>
+  <circle class="wmd-bell" cx="103.0" cy="25.0" r="11.25" fill="#9ADD6D"/>
 </svg>

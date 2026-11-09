@@ -1,20 +1,16 @@
 # Changelog
 
+## Unreleased
+
+Vendor the palette from project-branding main with a script (#26). Show each box's status in the flow view (#27). Fenced schemas show as the preview's own code block, with no box around it (#28). Color schemas, compact schema lines and in/out bubbles with highlight.js (#29). Form controls follow the VS Code theme (#30). Textareas take the full width. The W icon is native at rest, in color on hover, and has a magenta border when open (#31).
+
 ## 0.3.1 - 2026-11-08
 
 Icon improvements
 
 ## 0.3.0 - 2026-11-08
 
-Release workflow: send the commit mutation as a JSON body (#23). Release from a Run workflow button: bump, commit, tag, then approve publishing (#22). Receipt: no margins around the records (#21). Gonogo: green on the right (#20). Ship the Enterprise-R palette as --ui-* variables (#19). Snap icon colours to palette (#18).
-
-## Unreleased
-
-The Enterprise-R palette ships as `--ui-*` variables, for work card styles to use. The card colours are unchanged.
-
-A gonogo has its green border on the right and its red border on the left: go is the right path.
-
-The receipt is tight under any base stylesheet: the blocks around its records have no margins, so spacing set in pixels no longer leaves gaps.
+Release workflow: send the commit mutation as a JSON body (#23). Release from a Run workflow button: bump, commit, tag, then approve publishing (#22). Receipt: no margins around the records (#21). Gonogo: green on the right (#20). Ship the Enterprise-R palette as --ui-* variables (#19). Snap icon colors to palette (#18).
 
 ## 0.2.3 - 2026-10-30
 

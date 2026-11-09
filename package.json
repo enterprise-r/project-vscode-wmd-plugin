@@ -48,14 +48,15 @@
     "markdown.previewStyles": [
       "./dist/palette.css",
       "./dist/ui.css",
-      "./dist/style.css"
+      "./dist/style.css",
+      "./dist/vscode.css"
     ],
     "markdown.previewScripts": [
       "./dist/wmd.js"
     ]
   },
   "scripts": {
-    "build": "npx --yes esbuild@0.25 media/wmd.js media/palette.css media/ui.css media/style.css --bundle --loader:.svg=text --minify --target=chrome122 --outdir=dist",
+    "build": "npx --yes esbuild@0.25 media/wmd.js media/palette.css media/ui.css media/style.css media/vscode.css --bundle --loader:.svg=text --minify --legal-comments=eof --target=chrome122 --outdir=dist",
     "watch": "npm run build -- --watch=forever",
     "vscode:prepublish": "npm run build"
   }
