@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.4.0 - 2026-11-09
+
 Vendor the palette from project-branding main with a script (#26). Show each
 box's status in the flow view (#27). Fenced schemas show as the preview's own
 code block, with no box around it (#28). Color schemas, compact schema lines and
