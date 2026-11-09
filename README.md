@@ -64,6 +64,9 @@ code --install-extension wmd-*.vsix
 4. After editing `media/`, run **Developer: Reload Window** in the second window.
    Requires Node.js.
 
+`media/palette.css` is copied unedited from project-branding by
+`scripts/vendor-palette.sh` (`main` by default).
+
 ## Release
 
 1. In GitHub, open **Actions** > **Release** > **Run workflow**.
