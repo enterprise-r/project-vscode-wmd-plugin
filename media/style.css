@@ -51,16 +51,17 @@ body.wmd {
     & gonogo[check] > :is(go, nogo):not(:has(~ go, ~ nogo)) { order: 2; }
 
     /* Form names and card agent/skill top right; each box's own status bottom right.
-       ::after is already the name or the gonogo check bubble. */
+       ::after is already the name or the gonogo check bubble. A box with data-state
+       is left alone: wcard draws its run mark there. */
     & :is(form[name], card[agent], card[skill]) { position: relative; }
     & :is(card[agent], card[skill])::after, & form[name]::after, & .wmd-record > .wmd-name,
-    & :is(card, form, go, nogo)[status]::before {
+    & :is(card, form, go, nogo)[status]:not([data-state])::before {
       font-size: .75em; font-weight: normal; opacity: .6;
       font-family: var(--vscode-editor-font-family, monospace);
     }
     & :is(form[name], card[agent], card[skill])::after { position: absolute; top: .3em; right: .6em; }
-    & :is(card, form, go, nogo)[status] { position: relative; padding-bottom: 1.8em; }
-    & :is(card, form, go, nogo)[status]::before {
+    & :is(card, form, go, nogo)[status]:not([data-state]) { position: relative; padding-bottom: 1.8em; }
+    & :is(card, form, go, nogo)[status]:not([data-state])::before {
       content: attr(status); position: absolute; bottom: .3em; right: .6em;
     }
     & form[name]::after { content: attr(name); }
