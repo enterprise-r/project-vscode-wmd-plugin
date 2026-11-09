@@ -21,8 +21,6 @@ body.wmd {
   & schema:has(> pre) { white-space: normal; }
   & schema:has(> pre) > pre { margin: 0; }
   & .wmd-schema { display: none; }
-  /* Shown again in full and flow. Hidden here so screen, document and receipt stay plain. */
-  & .wmd-status, & .wmd-check, & .wmd-select { display: none; }
 
   /* Boxes: full, screen and flow */
   &:is(.wmd-full, .wmd-screen, .wmd-flow) {
@@ -38,7 +36,7 @@ body.wmd {
   /* Bubbles and names: full and flow */
   &:is(.wmd-full, .wmd-flow) {
     /* in/out dotted, gonogo check dashed */
-    & :is(in, out), & gonogo[check]::after, & .wmd-check {
+    & :is(in, out), & gonogo[check]::after {
       display: block; margin: .5em 0; padding: .4em 1em; text-align: center;
       font-family: var(--vscode-editor-font-family, monospace);
       border: 1px dotted var(--vscode-editorWidget-border, var(--vscode-foreground, currentColor));
@@ -47,30 +45,25 @@ body.wmd {
     & :is(in, out) { width: fit-content; margin-left: auto; margin-right: auto; }
     & in { margin-top: -.3em; }
     & out { margin-bottom: -.3em; border-radius: 0; } /* square box */
-    & gonogo[check]::after, & .wmd-check { margin-top: -.3em; margin-bottom: -.3em; }
-    /* The check bubble sits right before the last go or nogo, in either order.
-       .wmd-check is the same bubble with highlighting; the pseudo remains when it is absent. */
+    & gonogo[check]::after { margin-top: -.3em; margin-bottom: -.3em; }
+    /* The check bubble sits right before the last go or nogo, in either order */
     & gonogo[check] { display: flex; flex-direction: column; }
-    & gonogo[check]::after, & .wmd-check { order: 1; border-style: dashed; align-self: center; }
-    & gonogo[check]::after { content: attr(check); }
-    & gonogo[check]:has(> .wmd-check)::after { content: none; }
+    & gonogo[check]::after { content: attr(check); order: 1; border-style: dashed; align-self: center; }
     & gonogo[check] > :is(go, nogo):not(:has(~ go, ~ nogo)) { order: 2; }
 
     /* Form names and card agent/skill top right; each box's own status bottom right.
        ::after is already the name or the gonogo check bubble. */
     & :is(form[name], card[agent], card[skill]) { position: relative; }
     & :is(card[agent], card[skill])::after, & form[name]::after, & .wmd-record > .wmd-name,
-    & :is(card, form, go, nogo)[status]::before, & .wmd-status {
+    & :is(card, form, go, nogo)[status]::before {
       font-size: .75em; font-weight: normal; opacity: .6;
       font-family: var(--vscode-editor-font-family, monospace);
     }
     & :is(form[name], card[agent], card[skill])::after { position: absolute; top: .3em; right: .6em; }
     & :is(card, form, go, nogo)[status] { position: relative; padding-bottom: 1.8em; }
-    & .wmd-status { display: block; position: absolute; bottom: .3em; right: .6em; }
     & :is(card, form, go, nogo)[status]::before {
       content: attr(status); position: absolute; bottom: .3em; right: .6em;
     }
-    & :is(card, form, go, nogo)[status]:has(> .wmd-status)::before { content: none; }
     & form[name]::after { content: attr(name); }
     & card[agent][skill]::after { content: attr(agent) "/" attr(skill); }
     & card[agent]:not([skill])::after { content: attr(agent); }
@@ -78,13 +71,11 @@ body.wmd {
 
     /* Input names and record select as small bubbles; the input label is the tooltip */
     @media screen {
-      & record[select]::after, & .wmd-select {
-        font-size: .75em; font-weight: normal; opacity: .6;
+      & record[select]::after {
+        content: attr(select); font-size: .75em; font-weight: normal; opacity: .6;
         font-family: var(--vscode-editor-font-family, monospace);
       }
-      & record[select]::after { content: attr(select); }
-      & record[select]:has(> .wmd-select)::after { content: none; }
-      & record[select]::after, & .wmd-record > .wmd-name:not(:empty), & .wmd-select {
+      & record[select]::after, & .wmd-record > .wmd-name:not(:empty) {
         display: inline; padding: 0 .5ex; margin: 0 1ex; white-space: normal;
         border: 1px solid var(--vscode-editorWidget-border, var(--vscode-foreground, currentColor));
         border-radius: 1em;
@@ -127,8 +118,7 @@ body.wmd {
     & .wmd-schema.wmd-bad { color: red; }
     & .markdown-body {
       & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema,
-             .wmd-status, .wmd-check,
-             in *, out *, record *, .wmd-record *, .wmd-schema *, .wmd-status *, .wmd-check *,
+             in *, out *, record *, .wmd-record *, .wmd-schema *,
              :has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record])) { display: none; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) { font-size: 0; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) > * { font-size: var(--markdown-font-size, 14px); }

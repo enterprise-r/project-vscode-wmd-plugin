@@ -65,8 +65,8 @@ import hljs from './vendor/highlight.js';
 
   const setText = (node, value) => { if (node.textContent !== value) node.textContent = value; };
 
-  // Selectors, in/out, checks, status values and the compact schema line.
-  // Only hljs-* classes, so the preview's own theme supplies the colours.
+  // Selectors and in/out text, and the compact schema line.
+  // Only hljs-* classes, so the preview's own theme supplies the colors.
   hljs.registerLanguage('wmd', (hljs) => ({
     name: 'Workcard',
     contains: [
@@ -76,42 +76,33 @@ import hljs from './vendor/highlight.js';
       { className: 'type', begin: /\b(?:string|number|integer|boolean|object|array|null|any)\b/ },
       { className: 'variable', begin: /\.[A-Za-z_][A-Za-z0-9_]*/ },
       { className: 'attr', begin: /[A-Za-z_][A-Za-z0-9_]*(?=\s*:)/, relevance: 0 },
-      { className: 'keyword', begin: /\b[A-Z][A-Z0-9_]+\b/ },
       { className: 'punctuation', begin: /[{}\[\]:,|*]/, relevance: 0 },
     ],
   }));
 
-  // Highlight only when the text changed. apply() runs on every DOM mutation,
-  // including the one this write causes.
+  // Highlight only when the text or the markup changed. apply() runs on every
+  // DOM mutation, including the one this write causes, and a preview update
+  // puts back the plain text. The markup is compared as read back, so an
+  // unchanged node is never written again.
   const paint = (node, text, language) => {
-    if (!text || node.wmdPainted === text) return;
+    if (!text || (node.wmdText === text && node.innerHTML === node.wmdHtml)) return;
     let html;
     try { html = hljs.highlight(text, { language, ignoreIllegals: true }).value; }
     catch { return; }
     node.innerHTML = html;
-    node.wmdPainted = text;
+    node.wmdText = text;
+    node.wmdHtml = node.innerHTML;
   };
-  // Leave a node alone when it already holds markup we did not write (a fenced schema).
+  // Leave a node alone when it holds markup we did not write (a fenced schema).
   const paintText = (node, language) => {
-    if (node.wmdPainted == null && node.children.length) return;
+    if (node.children.length && node.innerHTML !== node.wmdHtml) return;
     paint(node, node.textContent, language);
   };
   const restore = (node) => {
-    if (node.wmdPainted == null) return;
-    node.textContent = node.wmdPainted;
-    delete node.wmdPainted;
-  };
-  // Status, check and record select are CSS attr() text. A span can take hljs
-  // classes; the pseudo stays for a copy of this stylesheet that has no script.
-  const tag = (parent, className, text) => {
-    let node = parent.querySelector(`:scope > .${className}`);
-    if (!text) { node?.remove(); return; }
-    if (!node) {
-      node = document.createElement('span');
-      node.className = className;
-      parent.append(node);
-    }
-    paint(node, text, 'wmd');
+    if (node.wmdText == null) return;
+    if (node.innerHTML === node.wmdHtml) node.textContent = node.wmdText;
+    delete node.wmdText;
+    delete node.wmdHtml;
   };
 
   // Mirror each input[record] as "Record: value" text for flow and receipt.
@@ -185,24 +176,9 @@ import hljs from './vendor/highlight.js';
       }
       setText(mirror, text);
       if (mirror.title !== tip) mirror.title = tip;
-      if (mirror.classList.contains('wmd-bad')) delete mirror.wmdPainted;
+      if (mirror.classList.contains('wmd-bad')) delete mirror.wmdText;
       else paint(mirror, text, 'wmd');
-      if (!schema.querySelector(':scope > pre')) paintText(schema, 'json');
-    });
-  };
-
-  const keywords = () => {
-    document.querySelectorAll('in, out').forEach((node) => paintText(node, 'wmd'));
-    document.querySelectorAll(':is(card, form, go, nogo)[status]').forEach((node) =>
-      tag(node, 'wmd-status', node.getAttribute('status')));
-    document.querySelectorAll('gonogo[check]').forEach((node) =>
-      tag(node, 'wmd-check', node.getAttribute('check')));
-    document.querySelectorAll('record[select]').forEach((node) =>
-      tag(node, 'wmd-select', node.getAttribute('select')));
-    document.querySelectorAll('.wmd-status, .wmd-check, .wmd-select').forEach((node) => {
-      const want = node.classList.contains('wmd-status') ? 'status'
-        : node.classList.contains('wmd-check') ? 'check' : 'select';
-      if (!node.parentElement?.hasAttribute(want)) node.remove();
+      paintText(schema, 'json');
     });
   };
 
@@ -217,13 +193,13 @@ import hljs from './vendor/highlight.js';
     const off = current === 'disabled';
     document.body.classList.toggle('wmd', !off);
     if (off) {
-      document.querySelectorAll('.wmd-record, .wmd-schema, .wmd-status, .wmd-check, .wmd-select').forEach((n) => n.remove());
+      document.querySelectorAll('.wmd-record, .wmd-schema').forEach((n) => n.remove());
       document.querySelectorAll('in, out, schema').forEach(restore);
       return;
     }
     records();
     schemas();
-    keywords();
+    document.querySelectorAll('in, out').forEach((node) => paintText(node, 'wmd'));
   };
 
   let pending = false;
