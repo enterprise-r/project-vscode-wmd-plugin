@@ -110,12 +110,23 @@ import hljs from './vendor/highlight.js';
     delete node.wmdHtml;
   };
 
+  // The input name bubble, colored as a variable like .Name in a selector.
+  const setName = (node, value) => {
+    const v = node.firstElementChild;
+    if (!value) { setText(node, ''); return; }
+    if (node.childNodes.length === 1 && v?.className === 'hljs-variable' && v.textContent === value) return;
+    const span = document.createElement('span');
+    span.className = 'hljs-variable';
+    span.textContent = value;
+    node.replaceChildren(span);
+  };
+
   // Mirror each input[record] as "Record: value" text for flow and receipt.
   const fill = (input, text) => {
     setText(text.children[0], `${input.getAttribute('record')}: `);
     setText(text.children[1], input.value);
     const name = text.children[2];
-    setText(name, input.name || '');
+    setName(name, input.name || '');
     const label = input.id && document.querySelector(`label[for="${CSS.escape(input.id)}"]`);
     const tip = label ? label.textContent.trim() : '';
     if (name.title !== tip) name.title = tip;
