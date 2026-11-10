@@ -6,7 +6,7 @@ import hljs from './vendor/highlight.js';
 
 (() => {
   const ID = 'wmd-media';
-  const TARGETS = ['full', 'screen', 'document', 'flow', 'receipt', 'disabled'];
+  const TARGETS = ['full', 'flow', 'screen', 'document', 'receipt', 'disabled'];
 
   let source = (() => {
     const meta = document.getElementById('vscode-markdown-preview-data');
@@ -70,7 +70,7 @@ import hljs from './vendor/highlight.js';
 
   const setText = (node, value) => { if (node.textContent !== value) node.textContent = value; };
 
-  // Selectors and in/out text, and the compact schema line.
+  // Selectors, in/out text, check and select bubbles, and the compact schema line.
   // Only hljs-* classes, so the preview's own theme supplies the colors.
   hljs.registerLanguage('wmd', (hljs) => ({
     name: 'Workcard',
@@ -110,12 +110,23 @@ import hljs from './vendor/highlight.js';
     delete node.wmdHtml;
   };
 
+  // The input name bubble, colored as a variable like .Name in a selector.
+  const setName = (node, value) => {
+    const v = node.firstElementChild;
+    if (!value) { setText(node, ''); return; }
+    if (node.childNodes.length === 1 && v?.className === 'hljs-variable' && v.textContent === value) return;
+    const span = document.createElement('span');
+    span.className = 'hljs-variable';
+    span.textContent = value;
+    node.replaceChildren(span);
+  };
+
   // Mirror each input[record] as "Record: value" text for flow and receipt.
   const fill = (input, text) => {
     setText(text.children[0], `${input.getAttribute('record')}: `);
     setText(text.children[1], input.value);
     const name = text.children[2];
-    setText(name, input.name || '');
+    setName(name, input.name || '');
     const label = input.id && document.querySelector(`label[for="${CSS.escape(input.id)}"]`);
     const tip = label ? label.textContent.trim() : '';
     if (name.title !== tip) name.title = tip;
@@ -187,6 +198,23 @@ import hljs from './vendor/highlight.js';
     });
   };
 
+  // The gonogo check and the record select as spans, highlighted like
+  // <in>: an attr() label in a pseudo element cannot hold colored spans.
+  const bubble = (host, cls, text) => {
+    let span = host.wmdBubble;
+    if (!span?.isConnected || span.parentNode !== host) {
+      span = document.createElement('span');
+      span.className = cls;
+      host.wmdBubble = span;
+    }
+    if (host.lastChild !== span) host.append(span);
+    paint(span, text, 'wmd');
+  };
+  const bubbles = () => {
+    document.querySelectorAll('gonogo[check]').forEach((g) => bubble(g, 'wmd-check', g.getAttribute('check')));
+    document.querySelectorAll('record[select]').forEach((r) => bubble(r, 'wmd-select', r.getAttribute('select')));
+  };
+
   const apply = () => {
     if (!isWmd()) { document.body.classList.remove('wmd'); document.getElementById(ID)?.remove(); return; }
     if (!document.getElementById(ID)) {
@@ -198,12 +226,13 @@ import hljs from './vendor/highlight.js';
     const off = current === 'disabled';
     document.body.classList.toggle('wmd', !off);
     if (off) {
-      document.querySelectorAll('.wmd-record, .wmd-schema').forEach((n) => n.remove());
+      document.querySelectorAll('.wmd-record, .wmd-schema, .wmd-check, .wmd-select').forEach((n) => n.remove());
       document.querySelectorAll('in, out, schema').forEach(restore);
       return;
     }
     records();
     schemas();
+    bubbles();
     document.querySelectorAll('in, out').forEach((node) => paintText(node, 'wmd'));
   };
 

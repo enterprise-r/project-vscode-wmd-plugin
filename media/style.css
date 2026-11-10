@@ -1,4 +1,29 @@
 /* Applies only when wmd.js marks the preview of a .w.md file. */
+
+/* Colors, from the Enterprise-R palette (palette.css), per VS Code theme
+   kind. Dark and high contrast take the palette as is. Light themes mix
+   each color toward the palette's deep lilac (lines) or its background
+   (text), for contrast on white. Each use falls back to the dark color,
+   so a page that sets these variables itself (wcard) keeps its own. */
+body.wmd:is(.vscode-dark, .vscode-high-contrast) {
+  --wmd-card-color: var(--ui-red);
+  --wmd-agent-color: var(--ui-magenta);
+  --wmd-form-color: var(--ui-blue-bright);
+  --wmd-go-color: var(--ui-green);
+  --wmd-nogo-color: var(--ui-red);
+  --wmd-bubble-color: var(--ui-yellow);
+  --wmd-status-color: var(--ui-accent);
+}
+body.wmd:is(.vscode-light, .vscode-high-contrast-light) {
+  --wmd-card-color: color-mix(in oklab, var(--ui-red) 70%, var(--ui-border));
+  --wmd-agent-color: color-mix(in oklab, var(--ui-magenta) 50%, var(--ui-border));
+  --wmd-form-color: color-mix(in oklab, var(--ui-blue-bright) 65%, var(--ui-border));
+  --wmd-go-color: color-mix(in oklab, var(--ui-green) 70%, var(--ui-border));
+  --wmd-nogo-color: color-mix(in oklab, var(--ui-red) 70%, var(--ui-border));
+  --wmd-bubble-color: color-mix(in oklab, var(--ui-yellow) 60%, var(--ui-border));
+  --wmd-status-color: color-mix(in oklab, var(--ui-accent) 64%, var(--ui-bg));
+}
+
 body.wmd {
   /* Defaults for every target */
   & :is(in, out) { display: none; }
@@ -16,70 +41,86 @@ body.wmd {
   & schema {
     display: block; white-space: pre; margin: .5em 0; padding: .4em 1em; overflow-x: auto;
     font-family: var(--vscode-editor-font-family, monospace);
-    border: 1px solid var(--vscode-editorWidget-border, var(--vscode-foreground, currentColor));
+    border: 1px solid var(--wmd-schema-color, var(--wmd-agent-color, var(--ui-magenta)));
     border-radius: 4px;
   }
   & schema:has(> pre) { white-space: normal; padding: 0; border: 0; }
   & schema:has(> pre) > pre { margin: 0; }
   & .wmd-schema { display: none; }
+  /* A schema in a card takes the card's own border color: the agent's
+     lilac by default, or the color a card sets inline. */
+  & card > schema { border-color: inherit; }
+  /* wmd.js writes the gonogo check and the record select as highlighted
+     spans; they show only as bubbles, in full and flow. */
+  & :is(.wmd-check, .wmd-select) { display: none; }
 
-  /* Boxes: full, screen and flow */
+  /* Boxes: full, screen and flow. Schemas take the agent's lilac. */
   &:is(.wmd-full, .wmd-screen, .wmd-flow) {
     & :is(card, form, gonogo, go, nogo) { display: block; margin: .5em 0; padding: .5em 1em; }
-    & card { border: 2px dotted red; }
-    & card[agent] { border-color: var(--wmd-agent-color, purple); }
-    & form { border: 3px solid gray; }
-    & go { border: 3px dashed green; }
-    & nogo { border: 3px dashed red; }
-    & gonogo { border-left: 6px dotted red; border-right: 6px dotted green; } /* go is the right path */
+    & card { border: 2px dotted var(--wmd-card-color, var(--ui-red)); }
+    & card[agent] { border: var(--wmd-agent-width, 3px) dashed var(--wmd-agent-color, var(--ui-magenta)); }
+    & form { border: 3px solid var(--wmd-form-color, var(--ui-blue-bright)); }
+    /* The gonogo family is one 3px dotted stroke. go is the right path:
+       nogo grows out of the left line and go out of the right one, open on
+       that side, and stops short of the far line by --wmd-branch-inset. */
+    & go { border: 3px dotted var(--wmd-go-color, var(--ui-green)); }
+    & nogo { border: 3px dotted var(--wmd-nogo-color, var(--ui-red)); }
+    & gonogo {
+      border-left: 3px dotted var(--wmd-nogo-color, var(--ui-red));
+      border-right: 3px dotted var(--wmd-go-color, var(--ui-green));
+    }
+    & gonogo > nogo { margin-left: -1em; margin-right: var(--wmd-branch-inset, clamp(.25em, 2.7%, 1em)); border-left: 0; }
+    & gonogo > go { margin-right: -1em; margin-left: var(--wmd-branch-inset, clamp(.25em, 2.7%, 1em)); border-right: 0; }
   }
 
   /* Bubbles and names: full and flow */
   &:is(.wmd-full, .wmd-flow) {
-    /* in/out dotted, gonogo check dashed */
-    & :is(in, out), & gonogo[check]::after {
+    /* Yellow bubbles: in/out solid, gonogo check dashed */
+    & :is(in, out), & .wmd-check {
       display: block; margin: .5em 0; padding: .4em 1em; text-align: center;
       font-family: var(--vscode-editor-font-family, monospace);
-      border: 1px dotted var(--vscode-editorWidget-border, var(--vscode-foreground, currentColor));
+      border: 1px solid var(--wmd-bubble-color, var(--ui-yellow));
       border-radius: 1em;
     }
     & :is(in, out) { width: fit-content; margin-left: auto; margin-right: auto; }
     & in { margin-top: -.3em; }
     & out { margin-bottom: -.3em; border-radius: 0; } /* square box */
-    & gonogo[check]::after { margin-top: -.3em; margin-bottom: -.3em; }
+    & .wmd-check { margin-top: -.3em; margin-bottom: -.3em; }
     /* The check bubble sits right before the last go or nogo, in either order */
     & gonogo[check] { display: flex; flex-direction: column; }
-    & gonogo[check]::after { content: attr(check); order: 1; border-style: dashed; align-self: center; }
+    & gonogo[check] > .wmd-check { order: 1; border-style: dashed; align-self: center; }
     & gonogo[check] > :is(go, nogo):not(:has(~ go, ~ nogo)) { order: 2; }
 
     /* Form names and card agent/skill top right; each box's own status bottom right.
-       ::after is already the name or the gonogo check bubble. A box with data-state
+       ::after is already the name. A box with data-state
        is left alone: wcard draws its run mark there. */
     & :is(form[name], card[agent], card[skill]) { position: relative; }
     & :is(card[agent], card[skill])::after, & form[name]::after, & .wmd-record > .wmd-name,
     & :is(card, form, go, nogo)[status]:not([data-state])::before {
-      font-size: .75em; font-weight: normal; opacity: .6;
+      font-size: .75em; font-weight: normal;
       font-family: var(--vscode-editor-font-family, monospace);
     }
     & :is(form[name], card[agent], card[skill])::after { position: absolute; top: .3em; right: .6em; }
     & :is(card, form, go, nogo)[status]:not([data-state]) { position: relative; padding-bottom: 1.8em; }
     & :is(card, form, go, nogo)[status]:not([data-state])::before {
       content: attr(status); position: absolute; bottom: .3em; right: .6em;
+      color: var(--wmd-status-color, var(--ui-accent));
     }
     & form[name]::after { content: attr(name); }
     & card[agent][skill]::after { content: attr(agent) "/" attr(skill); }
     & card[agent]:not([skill])::after { content: attr(agent); }
+    & card[agent]::after { color: var(--wmd-agent-name-color, var(--wmd-agent-color, var(--ui-magenta))); }
     & card[skill]:not([agent])::after { content: attr(skill); }
 
-    /* Input names and record select as small bubbles; the input label is the tooltip */
+    /* Input names and record select as small yellow bubbles; the input label is the tooltip */
     @media screen {
-      & record[select]::after {
-        content: attr(select); font-size: .75em; font-weight: normal; opacity: .6;
+      & record[select] > .wmd-select {
+        font-size: .75em; font-weight: normal;
         font-family: var(--vscode-editor-font-family, monospace);
       }
-      & record[select]::after, & .wmd-record > .wmd-name:not(:empty) {
+      & record[select] > .wmd-select, & .wmd-record > .wmd-name:not(:empty) {
         display: inline; padding: 0 .5ex; margin: 0 1ex; white-space: normal;
-        border: 1px solid var(--vscode-editorWidget-border, var(--vscode-foreground, currentColor));
+        border: 1px solid var(--wmd-bubble-color, var(--ui-yellow));
         border-radius: 1em;
       }
     }
@@ -115,12 +156,13 @@ body.wmd {
     & .wmd-schema {
       display: block; width: fit-content; margin: .5em auto; padding: .4em 1em; text-align: center;
       font-family: var(--vscode-editor-font-family, monospace);
-      border: 1px solid var(--vscode-editorWidget-border, var(--vscode-foreground, currentColor));
+      border: 1px solid var(--wmd-schema-color, var(--wmd-agent-color, var(--ui-magenta)));
     }
-    & .wmd-schema.wmd-bad { color: red; }
+    & card > .wmd-schema { border-color: inherit; }
+    & .wmd-schema.wmd-bad { color: var(--wmd-nogo-color, var(--ui-red)); }
     & .markdown-body {
-      & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema,
-             in *, out *, record *, .wmd-record *, .wmd-schema *,
+      & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema, .wmd-check,
+             in *, out *, record *, .wmd-record *, .wmd-schema *, .wmd-check *,
              :has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record])) { display: none; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) { font-size: 0; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) > * { font-size: var(--markdown-font-size, 14px); }
