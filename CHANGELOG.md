@@ -8,7 +8,7 @@
 - Light themes use deeper shades, so lines and labels stay easy to read on white.
 - Names and statuses show at full strength instead of faded.
 - Input names, gate checks and record selections are syntax highlighted, like inputs and outputs.
-- The view menu lists Full, Flow, Screen, Document, Receipt and Disabled, with the most used views first.
+- The view menu lists Full, Flow, Screen, Document, Receipt and Disabled.
 
 ## 0.4.0 - 2026-11-09
 
