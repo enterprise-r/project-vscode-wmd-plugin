@@ -6,7 +6,7 @@ import hljs from './vendor/highlight.js';
 
 (() => {
   const ID = 'wmd-media';
-  const TARGETS = ['full', 'screen', 'document', 'flow', 'receipt', 'disabled'];
+  const TARGETS = ['full', 'flow', 'screen', 'document', 'receipt', 'disabled'];
 
   let source = (() => {
     const meta = document.getElementById('vscode-markdown-preview-data');

@@ -10,6 +10,7 @@ green right one. Light themes mix each color deeper for contrast. Names and
 statuses drop their 60% opacity. Input name bubbles are colored as variables,
 and the gonogo check and record select bubbles are highlighted like in/out.
 A schema in a card takes the card's border color, its own inline one included.
+The W menu lists the views as full, flow, screen, document, receipt, disabled.
 
 ## 0.4.0 - 2026-11-09
 
