@@ -47,6 +47,9 @@ body.wmd {
   & schema:has(> pre) { white-space: normal; padding: 0; border: 0; }
   & schema:has(> pre) > pre { margin: 0; }
   & .wmd-schema { display: none; }
+  /* wmd.js writes the gonogo check and the record select as highlighted
+     spans; they show only as bubbles, in full and flow. */
+  & :is(.wmd-check, .wmd-select) { display: none; }
 
   /* Boxes: full, screen and flow. Schemas take the agent's lilac. */
   &:is(.wmd-full, .wmd-screen, .wmd-flow) {
@@ -70,7 +73,7 @@ body.wmd {
   /* Bubbles and names: full and flow */
   &:is(.wmd-full, .wmd-flow) {
     /* Yellow bubbles: in/out solid, gonogo check dashed */
-    & :is(in, out), & gonogo[check]::after {
+    & :is(in, out), & .wmd-check {
       display: block; margin: .5em 0; padding: .4em 1em; text-align: center;
       font-family: var(--vscode-editor-font-family, monospace);
       border: 1px solid var(--wmd-bubble-color, var(--ui-yellow));
@@ -79,14 +82,14 @@ body.wmd {
     & :is(in, out) { width: fit-content; margin-left: auto; margin-right: auto; }
     & in { margin-top: -.3em; }
     & out { margin-bottom: -.3em; border-radius: 0; } /* square box */
-    & gonogo[check]::after { margin-top: -.3em; margin-bottom: -.3em; }
+    & .wmd-check { margin-top: -.3em; margin-bottom: -.3em; }
     /* The check bubble sits right before the last go or nogo, in either order */
     & gonogo[check] { display: flex; flex-direction: column; }
-    & gonogo[check]::after { content: attr(check); order: 1; border-style: dashed; align-self: center; }
+    & gonogo[check] > .wmd-check { order: 1; border-style: dashed; align-self: center; }
     & gonogo[check] > :is(go, nogo):not(:has(~ go, ~ nogo)) { order: 2; }
 
     /* Form names and card agent/skill top right; each box's own status bottom right.
-       ::after is already the name or the gonogo check bubble. A box with data-state
+       ::after is already the name. A box with data-state
        is left alone: wcard draws its run mark there. */
     & :is(form[name], card[agent], card[skill]) { position: relative; }
     & :is(card[agent], card[skill])::after, & form[name]::after, & .wmd-record > .wmd-name,
@@ -108,11 +111,11 @@ body.wmd {
 
     /* Input names and record select as small yellow bubbles; the input label is the tooltip */
     @media screen {
-      & record[select]::after {
-        content: attr(select); font-size: .75em; font-weight: normal;
+      & record[select] > .wmd-select {
+        font-size: .75em; font-weight: normal;
         font-family: var(--vscode-editor-font-family, monospace);
       }
-      & record[select]::after, & .wmd-record > .wmd-name:not(:empty) {
+      & record[select] > .wmd-select, & .wmd-record > .wmd-name:not(:empty) {
         display: inline; padding: 0 .5ex; margin: 0 1ex; white-space: normal;
         border: 1px solid var(--wmd-bubble-color, var(--ui-yellow));
         border-radius: 1em;
@@ -154,8 +157,8 @@ body.wmd {
     }
     & .wmd-schema.wmd-bad { color: var(--wmd-nogo-color, var(--ui-red)); }
     & .markdown-body {
-      & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema,
-             in *, out *, record *, .wmd-record *, .wmd-schema *,
+      & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema, .wmd-check,
+             in *, out *, record *, .wmd-record *, .wmd-schema *, .wmd-check *,
              :has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record])) { display: none; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) { font-size: 0; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) > * { font-size: var(--markdown-font-size, 14px); }

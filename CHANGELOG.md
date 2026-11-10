@@ -7,7 +7,8 @@ names and schemas share the lilac, light silver blue forms, amber statuses,
 yellow solid in/out bubbles and badges. The gonogo, go and nogo are one 3px
 dotted stroke, with nogo growing out of the red left line and go out of the
 green right one. Light themes mix each color deeper for contrast. Names and
-statuses drop their 60% opacity. Input name bubbles are colored as variables.
+statuses drop their 60% opacity. Input name bubbles are colored as variables,
+and the gonogo check and record select bubbles are highlighted like in/out.
 
 ## 0.4.0 - 2026-11-09
 
