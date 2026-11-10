@@ -2,68 +2,65 @@
 
 ## Unreleased
 
-Flow colors from the palette, as in wcard: lilac dashed agent cards whose
-names and schemas share the lilac, light silver blue forms, amber statuses,
-yellow solid in/out bubbles and badges. The gonogo, go and nogo are one 3px
-dotted stroke, with nogo growing out of the red left line and go out of the
-green right one. Light themes mix each color deeper for contrast. Names and
-statuses drop their 60% opacity. Input name bubbles are colored as variables,
-and the gonogo check and record select bubbles are highlighted like in/out.
-A schema in a card takes the card's border color, its own inline one included.
-The W menu lists the views as full, flow, screen, document, receipt, disabled.
+- The flow view takes on the Enterprise-R colors: lilac agent cards, light silver blue forms, amber statuses and yellow bubbles.
+- Go and nogo branches grow out of their gate's red and green sides, so each path reads as one line.
+- Schemas match the border color of their card, including a color the card sets itself.
+- Light themes use deeper shades, so lines and labels stay easy to read on white.
+- Names and statuses show at full strength instead of faded.
+- Input names, gate checks and record selections are syntax highlighted, like inputs and outputs.
+- The view menu lists Full, Flow, Screen, Document, Receipt and Disabled, with the most used views first.
 
 ## 0.4.0 - 2026-11-09
 
-Vendor the palette from project-branding main with a script (#26). Show each
-box's status in the flow view (#27). Fenced schemas show as the preview's own
-code block, with no box around it (#28). Color schemas, compact schema lines and
-in/out bubbles with highlight.js (#29). Form controls follow the VS Code theme
-(#30). Textareas take the full width. The W icon is native at rest, in color on
-hover, and has a magenta border when open (#31).
+- Each card, form and branch shows its status in the flow view.
+- Schemas written as code blocks look like the preview's other code, with no extra box.
+- Schemas, compact schema lines, inputs and outputs are syntax highlighted.
+- Form fields and buttons follow your VS Code theme.
+- Text areas use the full width.
+- The W icon blends in with VS Code at rest, shows its colors on hover and is outlined while its menu is open.
 
 ## 0.3.1 - 2026-11-08
 
-Icon improvements
+- The W button in the preview matches the extension icon, with a thicker border and a lilac outer band.
 
 ## 0.3.0 - 2026-11-08
 
-Release workflow: send the commit mutation as a JSON body (#23). Release from a
-Run workflow button: bump, commit, tag, then approve publishing (#22). Receipt:
-no margins around the records (#21). Gonogo: green on the right (#20). Ship the
-Enterprise-R palette as --ui-* variables (#19). Snap icon colors to palette
-(#18).
+- The receipt view lists records without extra spacing around them.
+- In a gate, the green go side is on the right.
+- Colors come from the Enterprise-R palette, including the icon's.
 
 ## 0.2.3 - 2026-10-30
 
-README describes the six targets and the current install and release steps. Work
-cards spelled as two words.
+- The README describes the six views and how to install.
 
 ## 0.2.2 - 2026-10-29
 
-New document target, a plain doc. New disabled target, the plain Markdown
-preview.
+- New Document view: the work card as a plain document.
+- New Disabled view: the plain Markdown preview, as if the extension were off.
 
 ## 0.2.1 - 2026-10-29
 
-Schema hidden in screen. Its compact line shows only in flow.
+- The Screen view hides schemas, and their compact line shows only in the Flow view.
 
 ## 0.2.0 - 2026-10-29
 
-Renamed to Workcard, with the new ID `enterprise-r.wmd`. Uninstall the old
-Workcard Preview. Each record on its own line in full and screen views.
+- The extension is now called Workcard. If you have the old Workcard Preview, uninstall it.
+- Each record sits on its own line in the Full and Screen views.
 
 ## 0.1.3 - 2026-10-29
 
-VS Code style tooltip on the W icon. Shows `<schema>` in the card preview.
+- The W icon has a VS Code style tooltip.
+- Schemas show in the card preview.
 
 ## 0.1.2 - 2026-10-29
 
-Gray W icon until hovered. Smaller package.
+- The W icon stays gray until you hover it.
+- Smaller download.
 
 ## 0.1.1 - 2026-10-29
 
-Cute little W icon.
+- A new W icon.
 
 ## 0.1.0 - 2026-10-29
 
-First release.
+- First release.
