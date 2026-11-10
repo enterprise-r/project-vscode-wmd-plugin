@@ -47,6 +47,9 @@ body.wmd {
   & schema:has(> pre) { white-space: normal; padding: 0; border: 0; }
   & schema:has(> pre) > pre { margin: 0; }
   & .wmd-schema { display: none; }
+  /* A schema in a card takes the card's own border color: the agent's
+     lilac by default, or the color a card sets inline. */
+  & card > schema { border-color: inherit; }
   /* wmd.js writes the gonogo check and the record select as highlighted
      spans; they show only as bubbles, in full and flow. */
   & :is(.wmd-check, .wmd-select) { display: none; }
@@ -155,6 +158,7 @@ body.wmd {
       font-family: var(--vscode-editor-font-family, monospace);
       border: 1px solid var(--wmd-schema-color, var(--wmd-agent-color, var(--ui-magenta)));
     }
+    & card > .wmd-schema { border-color: inherit; }
     & .wmd-schema.wmd-bad { color: var(--wmd-nogo-color, var(--ui-red)); }
     & .markdown-body {
       & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema, .wmd-check,

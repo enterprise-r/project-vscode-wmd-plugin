@@ -9,6 +9,7 @@ dotted stroke, with nogo growing out of the red left line and go out of the
 green right one. Light themes mix each color deeper for contrast. Names and
 statuses drop their 60% opacity. Input name bubbles are colored as variables,
 and the gonogo check and record select bubbles are highlighted like in/out.
+A schema in a card takes the card's border color, its own inline one included.
 
 ## 0.4.0 - 2026-11-09
 
