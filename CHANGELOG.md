@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+Flow colors from the palette, as in wcard: lilac dashed agent cards whose
+names and schemas share the lilac, light silver blue forms, amber statuses,
+yellow solid in/out bubbles and badges. The gonogo, go and nogo are one 3px
+dotted stroke, with nogo growing out of the red left line and go out of the
+green right one. Light themes mix each color deeper for contrast. Names and
+statuses drop their 60% opacity. Input name bubbles are colored as variables.
+
 ## 0.4.0 - 2026-11-09
 
 Vendor the palette from project-branding main with a script (#26). Show each

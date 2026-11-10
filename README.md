@@ -18,10 +18,12 @@ Other Markdown files are left untouched.
 
 ## Features
 
-- **Cards** with their `agent/skill` in the corner. Agent cards are purple.
+- **Cards** with their `agent/skill` in the corner. Agent cards are lilac and dashed,
+  and so are their names and schemas.
 - **Forms** with their name, inputs and the record each input fills.
 - **Go/nogo gates** with the `check` bubble before the last branch.
-- **In/out bubbles** and **records** with their `select` path.
+- **In/out bubbles** and **records** with their `select` path, in yellow.
+- **Colors from the Enterprise-R palette**, mixed deeper on light themes for contrast.
 - **Six targets**, switched from the **W** menu in the top-right corner.
 
 ## Targets
