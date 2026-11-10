@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.5.0 - 2026-11-10
+
 - The flow view takes on the Enterprise-R colors: lilac agent cards, light silver blue forms, amber statuses and yellow bubbles.
 - Go and nogo branches grow out of their gate's red and green sides, so each path reads as one line.
 - Schemas match the border color of their card, including a color the card sets itself.
