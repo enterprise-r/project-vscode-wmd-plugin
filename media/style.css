@@ -71,11 +71,56 @@ body.wmd {
     }
     & gonogo > nogo { margin-left: -1em; margin-right: var(--wmd-branch-inset, clamp(.25em, 2.7%, 1em)); border-left: 0; }
     & gonogo > go { margin-right: -1em; margin-left: var(--wmd-branch-inset, clamp(.25em, 2.7%, 1em)); border-right: 0; }
+
+    /* LCARS elbows: a branch's top and bottom lines bend into its gonogo
+       line along a quarter circle of the same radius as the branch's far
+       corners, 15px at the outer edge of the 3px stroke. The branch's box
+       starts where the curve ends, 12px from the line, so its own top and
+       bottom borders never run under the curve, and the curve stops where
+       it would run along the line (its first 39 degrees), so it never
+       draws over the line's dots. The browser lays the 3px dots every 6px
+       along the whole open outline, from its top left, and closes it with
+       a dot wherever the outline ends: so a branch is a whole number of
+       6px wide, its leftover going to the far side, and as tall as its
+       content rounded up to 6px plus the step its two far corners leave
+       (5px for go, 1px for nogo), and both its borders end on the line
+       side on a whole dot, never a doubled one. A browser without round()
+       or calc-size() keeps the plain size. Line, curve and border read as
+       one 3px dotted stroke. The curve is a mask over the branch's
+       ::after, painted in the line's color, in the room the gonogo leaves
+       above and below a branch. The text keeps its place. */
+    & gonogo > :is(go, nogo) {
+      position: relative; box-sizing: border-box;
+      width: round(down, 100% - var(--wmd-branch-inset, clamp(.25em, 2.7%, 1em)) - (12px - 1em), 6px);
+    }
+    & gonogo > nogo {
+      height: calc-size(auto, round(up, size, 6px) + 1px);
+      margin-left: calc(12px - 1em); margin-right: auto; padding-left: max(.25em, calc(1em - 12px));
+      border-top-right-radius: 15px; border-bottom-right-radius: 15px;
+    }
+    & gonogo > go {
+      height: calc-size(auto, round(up, size, 6px) + 5px);
+      margin-right: calc(12px - 1em); margin-left: auto; padding-right: max(.25em, calc(1em - 12px));
+      border-top-left-radius: 15px; border-bottom-left-radius: 15px;
+    }
+    & gonogo > :is(go, nogo)::after {
+      content: ""; position: absolute; top: -15px; bottom: -15px; width: 15px; pointer-events: none;
+    }
+    & gonogo > nogo::after {
+      left: -15px; background: var(--wmd-nogo-color, var(--ui-red));
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'%3E%3Cpath d='M4.51 8.5A13.5 13.5 0 0 0 15 13.5' fill='none' stroke='currentColor' stroke-width='3' stroke-dasharray='3 3'/%3E%3C/svg%3E") left top / 15px 15px no-repeat,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'%3E%3Cpath d='M4.51 6.5A13.5 13.5 0 0 1 15 1.5' fill='none' stroke='currentColor' stroke-width='3' stroke-dasharray='3 3'/%3E%3C/svg%3E") left bottom / 15px 15px no-repeat;
+    }
+    & gonogo > go::after {
+      right: -15px; background: var(--wmd-go-color, var(--ui-green));
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'%3E%3Cpath d='M10.49 8.5A13.5 13.5 0 0 1 0 13.5' fill='none' stroke='currentColor' stroke-width='3' stroke-dasharray='3 3'/%3E%3C/svg%3E") right top / 15px 15px no-repeat,
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 15'%3E%3Cpath d='M10.49 6.5A13.5 13.5 0 0 0 0 1.5' fill='none' stroke='currentColor' stroke-width='3' stroke-dasharray='3 3'/%3E%3C/svg%3E") right bottom / 15px 15px no-repeat;
+    }
   }
 
   /* Bubbles and names: full and flow */
   &:is(.wmd-full, .wmd-flow) {
-    /* Yellow bubbles: in/out solid, gonogo check dashed */
+    /* Yellow bubbles, solid: in, out and the gonogo check */
     & :is(in, out), & .wmd-check {
       display: block; margin: .5em 0; padding: .4em 1em; text-align: center;
       font-family: var(--vscode-editor-font-family, monospace);
@@ -88,7 +133,7 @@ body.wmd {
     & .wmd-check { margin-top: -.3em; margin-bottom: -.3em; }
     /* The check bubble sits right before the last go or nogo, in either order */
     & gonogo[check] { display: flex; flex-direction: column; }
-    & gonogo[check] > .wmd-check { order: 1; border-style: dashed; align-self: center; }
+    & gonogo[check] > .wmd-check { order: 1; align-self: center; }
     & gonogo[check] > :is(go, nogo):not(:has(~ go, ~ nogo)) { order: 2; }
 
     /* Form names and card agent/skill top right; each box's own status bottom right.
@@ -149,9 +194,11 @@ body.wmd {
     & .markdown-body blockquote { border-left-color: currentColor; opacity: .8; }
   }
 
-  /* Flow: only the enabled elements; quotes, front matter and freestanding text go */
+  /* Flow: the front matter and the enabled elements; quotes and freestanding text go.
+     The front matter is VS Code's own block, as in full: a table, a code
+     block or a parse error, as the markdown.preview.frontMatter setting picks. */
   &.wmd-flow {
-    & :is(blockquote, .frontmatter, .frontmatter-error) { display: none; }
+    & blockquote { display: none; }
     /* schema compact: a square box sized to its text */
     & .wmd-schema {
       display: block; width: fit-content; margin: .5em auto; padding: .4em 1em; text-align: center;
@@ -162,7 +209,8 @@ body.wmd {
     & .wmd-schema.wmd-bad { color: var(--wmd-nogo-color, var(--ui-red)); }
     & .markdown-body {
       & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema, .wmd-check,
-             in *, out *, record *, .wmd-record *, .wmd-schema *, .wmd-check *,
+             .frontmatter, .frontmatter-error,
+             in *, out *, record *, .wmd-record *, .wmd-schema *, .wmd-check *, .frontmatter *, .frontmatter-error *,
              :has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record])) { display: none; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) { font-size: 0; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) > * { font-size: var(--markdown-font-size, 14px); }
