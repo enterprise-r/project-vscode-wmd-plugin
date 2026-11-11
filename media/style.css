@@ -75,7 +75,7 @@ body.wmd {
 
   /* Bubbles and names: full and flow */
   &:is(.wmd-full, .wmd-flow) {
-    /* Yellow bubbles: in/out solid, gonogo check dashed */
+    /* Yellow bubbles, solid: in, out and the gonogo check */
     & :is(in, out), & .wmd-check {
       display: block; margin: .5em 0; padding: .4em 1em; text-align: center;
       font-family: var(--vscode-editor-font-family, monospace);
@@ -88,7 +88,7 @@ body.wmd {
     & .wmd-check { margin-top: -.3em; margin-bottom: -.3em; }
     /* The check bubble sits right before the last go or nogo, in either order */
     & gonogo[check] { display: flex; flex-direction: column; }
-    & gonogo[check] > .wmd-check { order: 1; border-style: dashed; align-self: center; }
+    & gonogo[check] > .wmd-check { order: 1; align-self: center; }
     & gonogo[check] > :is(go, nogo):not(:has(~ go, ~ nogo)) { order: 2; }
 
     /* Form names and card agent/skill top right; each box's own status bottom right.
