@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- The flow view shows the front matter at the top, as the full view does.
+- Go and nogo branches bend into their gate's line with rounded elbows, as one continuous dotted line.
+- The gate check bubble is solid, like the input and output bubbles.
+
 ## 0.5.0 - 2026-11-10
 
 - The flow view takes on the Enterprise-R colors: lilac agent cards, light silver blue forms, amber statuses and yellow bubbles.
