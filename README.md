@@ -31,7 +31,7 @@ Other Markdown files are left untouched.
 | Target     | Shows                                                        |
 | ---------- | ------------------------------------------------------------ |
 | `full`     | Everything, with boxes, bubbles and labels                   |
-| `flow`     | Only cards, forms, gates, bubbles and records                |
+| `flow`     | Only the front matter, cards, forms, gates, bubbles and records |
 | `screen`   | Like full, without nested quotes and front matter            |
 | `document` | A plain doc: like screen, without nogo, boxes or colors      |
 | `receipt`  | Only records, one per line. Printing uses this target too    |

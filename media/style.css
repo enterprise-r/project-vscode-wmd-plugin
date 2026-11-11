@@ -194,9 +194,11 @@ body.wmd {
     & .markdown-body blockquote { border-left-color: currentColor; opacity: .8; }
   }
 
-  /* Flow: only the enabled elements; quotes, front matter and freestanding text go */
+  /* Flow: the front matter and the enabled elements; quotes and freestanding text go.
+     The front matter is VS Code's own block, as in full: a table, a code
+     block or a parse error, as the markdown.preview.frontMatter setting picks. */
   &.wmd-flow {
-    & :is(blockquote, .frontmatter, .frontmatter-error) { display: none; }
+    & blockquote { display: none; }
     /* schema compact: a square box sized to its text */
     & .wmd-schema {
       display: block; width: fit-content; margin: .5em auto; padding: .4em 1em; text-align: center;
@@ -207,7 +209,8 @@ body.wmd {
     & .wmd-schema.wmd-bad { color: var(--wmd-nogo-color, var(--ui-red)); }
     & .markdown-body {
       & :not(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record], .wmd-schema, .wmd-check,
-             in *, out *, record *, .wmd-record *, .wmd-schema *, .wmd-check *,
+             .frontmatter, .frontmatter-error,
+             in *, out *, record *, .wmd-record *, .wmd-schema *, .wmd-check *, .frontmatter *, .frontmatter-error *,
              :has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record])) { display: none; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) { font-size: 0; }
       & p:has(card, form, gonogo, go, nogo, in, out, record, .wmd-record, input[record]) > * { font-size: var(--markdown-font-size, 14px); }
